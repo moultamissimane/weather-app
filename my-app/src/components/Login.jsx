@@ -4,7 +4,7 @@ import LoginBg from "../../assets/LoginBg.png";
 import { button1 } from "../common/Button";
 import { button3 } from "../common/Button";
 
-const Login = () => {
+const Login = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image style={styles.patternbg} source={LoginBg} />
@@ -25,6 +25,12 @@ const Login = () => {
             <Text style={styles.fp}>Forget password?</Text>
           </View>
           <Text style={button3}>Login</Text>
+          <Text
+            style={styles.Create}
+            onPress={() => navigation.navigate("Signup")}
+          >
+            Don't have an account?
+          </Text>
         </View>
       </View>
     </View>
@@ -126,5 +132,13 @@ const styles = StyleSheet.create({
     fontWeight: "semibold",
     color: "white",
     backgroundColor: "#4b66e4",
+  },
+  Create: {
+    display: "flex",
+    // marginTop: "10%",
+    marginLeft: "25%",
+    fontSize: 20,
+    fontWeight: "semibold",
+    color: "#4b66e4",
   },
 });

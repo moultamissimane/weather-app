@@ -4,13 +4,18 @@ import Weather from '../../assets/Weather.png'
 import { button1 } from '../common/Button'
 import { button2 } from '../common/Button'
 
-const Welcome = () => {
+const Welcome = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Image style={styles.patternbg} source={Weather} />
       <View style={styles.container1}>
-        <Text style={button1}>Login</Text>
-        <Text style={button2}>Signup</Text>
+        <Text style={button1}
+        onPress={() => navigation.navigate('Login')}
+        >Login</Text>
+        <Text style={button2}
+        onPress={() => navigation.navigate('Signup')}
+        
+        >Signup</Text>
       </View>
     </View>
   )
@@ -20,7 +25,7 @@ export default Welcome
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 200,
     // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
