@@ -17,7 +17,9 @@ const Signup = ({ navigation }) => {
       <Image style={styles.patternbg} source={LoginBg} />
       <ScrollView style={styles.container1}>
         <View style={styles.containerLogin}>
-          <Text style={styles.loginText}>Sign Up</Text>
+          <Text style={styles.loginText}
+          onPress={() => navigation.navigate("Welcome")}
+          >Sign Up</Text>
           <Text style={styles.CreateText}>Create an account to continue</Text>
           <View>
             <Text style={styles.label}>Name</Text>
