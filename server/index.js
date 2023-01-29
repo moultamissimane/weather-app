@@ -19,5 +19,5 @@ app.get("/", requireToken, (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`listening on ${PORT} successfully ✨`);
+  console.log(`listening on PORT: ${PORT} successfully ✨`);
 });

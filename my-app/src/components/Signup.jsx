@@ -4,51 +4,96 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import LoginBg from "../../assets/LoginBg.png";
 import { button1 } from "../common/Button";
 import { button3 } from "../common/Button";
 
 const Signup = ({ navigation }) => {
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    address: "",
+  });
+
+  const [errors, setErrors] = useState(null);
+
+  const sendToBackend = () => {
+    // console.log(data);
+    if (
+      data.name == "" ||
+      data.email == "" ||
+      data.password == "" ||
+      data.confirmPassword == "" ||
+      data.address == ""
+    ) {
+      setErrors("Please fill all the fields");
+      return;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.patternbg} source={LoginBg} />
       <ScrollView style={styles.container1}>
         <View style={styles.containerLogin}>
-          <Text style={styles.loginText}
-          onPress={() => navigation.navigate("Welcome")}
-          >Sign Up</Text>
+          <Text
+            style={styles.loginText}
+            onPress={() => navigation.navigate("Welcome")}
+          >
+            Sign Up
+          </Text>
           <Text style={styles.CreateText}>Create an account to continue</Text>
+
+          {errors ? <Text style={{ color: "red" }}>{errors}</Text> : null}
           <View>
             <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.input1} placeholder="Enter your name" />
+            <TextInput
+              onChange={(text) => setData({ ...data, name: text })}
+              style={styles.input1}
+              placeholder="Enter your name"
+            />
             <Text style={styles.label}>Email</Text>
-            <TextInput style={styles.input1} placeholder="Enter your email" />
+            <TextInput
+              onChange={(text) => setData({ ...data, email: text })}
+              style={styles.input1}
+              placeholder="Enter your email"
+            />
             <Text style={styles.label}>Password</Text>
             <TextInput
+              onChange={(text) => setData({ ...data, password: text })}
               style={styles.input2}
+              secureTextEntry={true}
               placeholder="Enter your password"
             />
             <Text style={styles.label}>Confirm Password</Text>
             <TextInput
+              onChange={(text) => setData({ ...data, confirmPassword: text })}
               style={styles.input2}
+              secureTextEntry={true}
               placeholder="Confirm your password"
             />
             <Text style={styles.label}>Address</Text>
-            <TextInput style={styles.input2} placeholder="Enter your address" />
+            <TextInput
+              onChange={(text) => setData({ ...data, address: text })}
+              style={styles.input2}
+              placeholder="Enter your address"
+            />
           </View>
-          {/* <View>
-            <Text style={styles.fp}>Forget password?</Text>
-          </View> */}
-          <Text style={button3}>Sign Up</Text>
-          <Text
-            style={styles.Create}
-            onPress={() => navigation.navigate("Login")}
+          <TouchableOpacity
+            onPress={() => {
+              sendToBackend();
+            }}
           >
-            Already have an account?{" "}
-          </Text>
+            <Text style={button3}>Sign Up</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.Create}>Already have an account? </Text>
         </View>
       </ScrollView>
     </View>

@@ -54,7 +54,7 @@ router.post("/login", async (req, res) => {
   try {
     bcrypt.compare(password, savedUser.password, (err, result) => {
       if (result) {
-        console.log("password matched");
+        console.log("password matched 😊");
         const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET);
         res.send({ token });
       } else {
