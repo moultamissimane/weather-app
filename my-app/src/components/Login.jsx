@@ -1,22 +1,79 @@
-import { Image, StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import LoginBg from "../../assets/LoginBg.png";
 import { button1 } from "../common/Button";
 import { button3 } from "../common/Button";
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState(null);
+
+  const sendToBackend = () => {
+    // console.log(data);
+    if (data.email == "" || data.password == "") {
+      setErrors("Please fill all the fields");
+      return;
+    } else {
+      try {
+        fetch("http://192.168.9.22:5000/login", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify(data),
+        }).then((res) =>
+          res.json().then((data) => {
+            // console.log(data);
+            if (data.error) {
+              setErrors(data.message);
+            } else {
+              alert("Login Successful");
+              navigation.navigate("Home");
+            }
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.patternbg} source={LoginBg} />
-      <View style={styles.container1}>
+      <ScrollView style={styles.container1}>
         <View style={styles.containerLogin}>
           <Text style={styles.loginText}>Login</Text>
           <Text style={styles.SigninText}>Sign in to continue</Text>
+
+          {errors ? <Text style={styles.error}>{errors}</Text> : null}
+
           <View>
             <Text style={styles.email}>Email</Text>
-            <TextInput style={styles.input1} placeholder="Enter your email" />
+            <TextInput
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, email: text })}
+              style={styles.input1}
+              placeholder="Enter your email"
+            />
             <Text style={styles.password}>Password</Text>
             <TextInput
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, password: text })}
               style={styles.input2}
               placeholder="Enter your password"
             />
@@ -24,7 +81,12 @@ const Login = ({navigation}) => {
           <View>
             <Text style={styles.fp}>Forget password?</Text>
           </View>
-          <Text style={button3}>Login</Text>
+          <TouchableOpacity onPressIn={sendToBackend}>
+            <Text style={button3} >
+              Login
+            </Text>
+          </TouchableOpacity>
+
           <Text
             style={styles.Create}
             onPress={() => navigation.navigate("Signup")}
@@ -32,7 +94,7 @@ const Login = ({navigation}) => {
             Don't have an account?
           </Text>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -54,6 +116,14 @@ const styles = StyleSheet.create({
     top: 0,
     width: "100%",
     height: "100%",
+  },
+  error: {
+    backgroundColor: "red",
+    color: "white",
+    padding: 10,
+    borderRadius: 5,
+    margin: 10,
+    fontSize: 15,
   },
   input1: {
     height: 40,

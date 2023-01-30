@@ -14,11 +14,11 @@ import { button3 } from "../common/Button";
 
 const Signup = ({ navigation }) => {
   const [data, setData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    address: "",
+    name: "azerty",
+    email: "azerty@gmail.com",
+    password: "azert",
+    confirmPassword: "azert",
+    address: "azrty",
   });
 
   const [errors, setErrors] = useState(null);
@@ -34,6 +34,34 @@ const Signup = ({ navigation }) => {
     ) {
       setErrors("Please fill all the fields");
       return;
+    } else {
+      if (data.password != data.confirmPassword) {
+        setErrors("Password and Confirm Password does not match");
+        return;
+      } else {
+        try {
+          fetch("http://192.168.9.22:5000/signup", {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }).then((res) =>
+            res.json().then((data) => {
+              // console.log(data);
+              if (data.error) {
+                setErrors(data.message);
+              } else {
+                alert("Signup Successful");
+                navigation.navigate("Login");
+              }
+            })
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
     }
   };
 
@@ -50,50 +78,58 @@ const Signup = ({ navigation }) => {
           </Text>
           <Text style={styles.CreateText}>Create an account to continue</Text>
 
-          {errors ? <Text style={{ color: "red" }}>{errors}</Text> : null}
+          {errors ? <Text style={styles.error}>{errors}</Text> : null}
           <View>
             <Text style={styles.label}>Name</Text>
             <TextInput
-              onChange={(text) => setData({ ...data, name: text })}
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, name: text })}
               style={styles.input1}
               placeholder="Enter your name"
             />
             <Text style={styles.label}>Email</Text>
             <TextInput
-              onChange={(text) => setData({ ...data, email: text })}
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, email: text })}
               style={styles.input1}
               placeholder="Enter your email"
             />
             <Text style={styles.label}>Password</Text>
             <TextInput
-              onChange={(text) => setData({ ...data, password: text })}
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, password: text })}
               style={styles.input2}
               secureTextEntry={true}
               placeholder="Enter your password"
             />
             <Text style={styles.label}>Confirm Password</Text>
             <TextInput
-              onChange={(text) => setData({ ...data, confirmPassword: text })}
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) =>
+                setData({ ...data, confirmPassword: text })
+              }
               style={styles.input2}
               secureTextEntry={true}
               placeholder="Confirm your password"
             />
             <Text style={styles.label}>Address</Text>
             <TextInput
-              onChange={(text) => setData({ ...data, address: text })}
+              onPressIn={() => setErrors(null)}
+              onChangeText={(text) => setData({ ...data, address: text })}
               style={styles.input2}
               placeholder="Enter your address"
             />
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              sendToBackend();
-            }}
-          >
+          <TouchableOpacity onPress={sendToBackend}>
             <Text style={button3}>Sign Up</Text>
           </TouchableOpacity>
 
-          <Text style={styles.Create}>Already have an account? </Text>
+          <Text
+            style={styles.Create}
+            onPress={() => navigation.navigate("Login")}
+          >
+            Already have an account?{" "}
+          </Text>
         </View>
       </ScrollView>
     </View>
@@ -112,6 +148,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: -40,
     height: "100%",
+  },
+  error: {
+    backgroundColor: "red",
+    color: "white",
+    padding: 10,
+    borderRadius: 5,
+    margin: 10,
+    fontSize: 15,
   },
   patternbg: {
     position: "absolute",

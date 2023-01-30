@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import Login from "./src/components/Login";
 import Signup from "./src/components/Signup";
 import Welcome from "./src/components/Welcome";
+import Home from "./src/components/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -22,6 +23,13 @@ export default function App() {
         <Stack.Screen
           name="Login"
           component={Login}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
           options={{
             headerShown: false,
           }}

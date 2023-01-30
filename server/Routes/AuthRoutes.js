@@ -8,6 +8,7 @@ require("dotenv").config();
 
 router.post("/signup", async (req, res) => {
   //   res.send("You made a post request");
+  console.log(req.body);
   const { name, email, password, address } = req.body;
   try {
     const user = new User({ name, email, password, address });
