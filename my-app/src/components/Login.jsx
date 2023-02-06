@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
       return;
     } else {
       try {
-        fetch("http://192.168.9.22:5000/login", {
+        fetch("http://192.168.11.106:5000/login", {
           method: "POST",
           headers: {
             Accept: "application/json",
@@ -78,13 +78,8 @@ const Login = ({ navigation }) => {
               placeholder="Enter your password"
             />
           </View>
-          <View>
-            <Text style={styles.fp}>Forget password?</Text>
-          </View>
           <TouchableOpacity onPressIn={sendToBackend}>
-            <Text style={button3} >
-              Login
-            </Text>
+            <Text style={button3}>Login</Text>
           </TouchableOpacity>
 
           <Text
@@ -104,7 +99,6 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -132,7 +126,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 13,
     borderColor: "#4b66e4",
-    // backgroundColor: '#4b66e4'
   },
   input2: {
     height: 40,
@@ -187,11 +180,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     fontWeight: "semibold",
   },
-  fp: {
-    display: "flex",
-    marginLeft: "65%",
-    color: "#4b66e4",
-  },
   loginBtn: {
     display: "flex",
     marginTop: "10%",
@@ -205,7 +193,8 @@ const styles = StyleSheet.create({
   },
   Create: {
     display: "flex",
-    // marginTop: "10%",
+    marginTop: "10%",
+    marginBottom: "40%",
     marginLeft: "25%",
     fontSize: 20,
     fontWeight: "semibold",

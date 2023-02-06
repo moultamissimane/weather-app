@@ -14,11 +14,11 @@ import { button3 } from "../common/Button";
 
 const Signup = ({ navigation }) => {
   const [data, setData] = useState({
-    name: "azerty",
-    email: "azerty@gmail.com",
-    password: "azert",
-    confirmPassword: "azert",
-    address: "azrty",
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    address: "",
   });
 
   const [errors, setErrors] = useState(null);
@@ -40,7 +40,7 @@ const Signup = ({ navigation }) => {
         return;
       } else {
         try {
-          fetch("http://192.168.9.22:5000/signup", {
+          fetch("http://192.168.11.106:5000/signup", {
             method: "POST",
             headers: {
               Accept: "application/json",

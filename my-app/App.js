@@ -3,7 +3,8 @@ import { StyleSheet, Text, View } from "react-native";
 import Login from "./src/components/Login";
 import Signup from "./src/components/Signup";
 import Welcome from "./src/components/Welcome";
-import Home from "./src/components/Home";
+import Home from "./src/screens/Home";
+import Error from "./src/screens/Error";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -37,6 +38,13 @@ export default function App() {
         <Stack.Screen
           name="Signup"
           component={Signup}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Error"
+          component={Error}
           options={{
             headerShown: false,
           }}
