@@ -1,11 +1,8 @@
-const mongoose = require("mongoose");
 const request = require("supertest");
-const app = require("../index");
-
+const app = require("../app");
 const User = require("../models/User");
-require("dotenv").config();
-
-// const { setupDB } = require("./test-setup");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -17,26 +14,52 @@ afterEach(async () => {
   await mongoose.connection.close();
 });
 
-// setupDB("test");
-
-// describe("Login", () => {
-//   it("should login a user", async () => {
-//     const user = {
-//       email: "",
-//       password: "",
-//     };
-//     const res = await request(app).post("/login").send(user);
-//     expect(res.statusCode).toEqual(200);
-//     expect(res.body).toHaveProperty("token");
-//   });
-// });
-
-describe('Login Route', () => {
-    it('should return a token when valid credentials are provided', async () => {
-      const mockUser = { email: 'test@example.com', password: 'password' };
-      const res = await request(app).post('/login').send(mockUser);
-  
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('token');
+describe("Login Route", () => {
+  it("Should log in a user", async () => {
+    const user = new User({
+      email: "test@example.com",
+      password: bcrypt.hashSync("password", 10),
     });
+    await user.save();
+
+    const response = await request(app)
+      .post("/login")
+      .send({ email: "test@example.com", password: "password" });
+
+    expect(response.status).toBe(200);
+    expect(response.body.token).toBeDefined();
   });
+
+  it("Should return error if email or password is missing", async () => {
+    const response = await request(app)
+      .post("/login")
+      .send({ email: "test@example.com" });
+
+    expect(response.status).toBe(422);
+    expect(response.body.error).toBe("Please add email or password");
+  });
+
+  it("Should return error if email is invalid", async () => {
+    const response = await request(app)
+      .post("/login")
+      .send({ email: "invalid@example.com", password: "password" });
+
+    expect(response.status).toBe(422);
+    expect(response.body.error).toBe("Invalid email or password");
+  });
+
+  it("Should return error if password is invalid", async () => {
+    const user = new User({
+      email: "test@example.com",
+      password: bcrypt.hashSync("password", 10),
+    });
+    await user.save();
+
+    const response = await request(app)
+      .post("/login")
+      .send({ email: "test@example.com", password: "invalidpassword" });
+
+    expect(response.status).toBe(422);
+    expect(response.body.error).toBe("Invalid email or password");
+  });
+});

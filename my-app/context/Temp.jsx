@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as Location from "expo-location";
-import { API_KEY } from "../constants/keys";
+import { API_KEY } from "../constants/Keys";
 
-const TempratureContext = createContext(null);
+const TempratureContext = createContext({});
 
 export const useTemp = () => useContext(TempratureContext);
 

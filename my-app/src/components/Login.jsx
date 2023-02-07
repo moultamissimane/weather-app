@@ -27,7 +27,7 @@ const Login = ({ navigation }) => {
       return;
     } else {
       try {
-        fetch("http://192.168.11.106:5000/login", {
+        fetch("http://192.168.9.22:5000/login", {
           method: "POST",
           headers: {
             Accept: "application/json",
