@@ -3,7 +3,6 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { NAV_BACKGROUND_COLOR } from "../../constants/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-
 //Screen height and Width
 const { width } = Dimensions.get("window");
 
