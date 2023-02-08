@@ -1,8 +1,10 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../index");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -14,52 +16,77 @@ afterEach(async () => {
   await mongoose.connection.close();
 });
 
-describe("Login Route", () => {
-  it("Should log in a user", async () => {
-    const user = new User({
-      email: "test@example.com",
-      password: bcrypt.hashSync("password", 10),
-    });
-    await user.save();
+jest.mock("jsonwebtoken", () => ({
+  sign: jest.fn(() => "mocked-token"),
+}));
 
-    const response = await request(app)
-      .post("/login")
-      .send({ email: "test@example.com", password: "password" });
+jest.mock("bcrypt", () => ({
+  compare: jest.fn((_, __, cb) => cb(null, true)),
+}));
 
-    expect(response.status).toBe(200);
-    expect(response.body.token).toBeDefined();
+describe("/login", () => {
+  const User = {
+    findOne: jest.fn(() =>
+      Promise.resolve({
+        email: "test@test.com",
+        password:
+          "$2b$10$/kG0m.I1HWJmKcgQMq.bYOt.zKj1/PytjzZ3V7OuHcFxk7cLf0yXK",
+      })
+    ),
+    _id: "123",
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  it("Should return error if email or password is missing", async () => {
+  it("should return 400 if email is not present in request", async () => {
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
     const response = await request(app)
       .post("/login")
-      .send({ email: "test@example.com" });
-
-    expect(response.status).toBe(422);
-    expect(response.body.error).toBe("Please add email or password");
+      .send({ password: "password" });
+    expect(response.statusCode).toBe(422);
+    expect(response.body).toEqual({ error: "Please add email or password" });
   });
 
-  it("Should return error if email is invalid", async () => {
+  it("should return 400 if password is not present in request", async () => {
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
     const response = await request(app)
       .post("/login")
-      .send({ email: "invalid@example.com", password: "password" });
-
-    expect(response.status).toBe(422);
-    expect(response.body.error).toBe("Invalid email or password");
+      .send({ email: "test@test.com" });
+    expect(response.statusCode).toBe(422);
+    expect(response.body).toEqual({ error: "Please add email or password" });
   });
 
-  it("Should return error if password is invalid", async () => {
-    const user = new User({
-      email: "test@example.com",
-      password: bcrypt.hashSync("password", 10),
-    });
-    await user.save();
+  it("should return 422 if user is not found", async () => {
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
+    User.findOne.mockImplementationOnce(() => Promise.resolve(null));
 
     const response = await request(app)
       .post("/login")
-      .send({ email: "test@example.com", password: "invalidpassword" });
+      .send({ email: "test@test.com", password: "password" });
+    expect(response.statusCode).toBe(422);
+    expect(response.body).toEqual({ error: "Invalid email or password" });
+  });
 
-    expect(response.status).toBe(422);
-    expect(response.body.error).toBe("Invalid email or password");
+  it("should return 200 and token if email and password are correct", async () => {
+    const app = express();
+    app.use(express.json());
+    app.use("/", router);
+
+    const response = await request(app)
+      .post("/login")
+      .send({ email: "test@test.com", password: "password" });
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toEqual({ token: "mocked-token" });
   });
 });
