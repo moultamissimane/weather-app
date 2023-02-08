@@ -4,18 +4,19 @@ import { API_KEY } from "../constants/Keys";
 
 const TempratureContext = createContext({});
 
-export const useTemp = () => useContext(TempratureContext);
+export function useTemp() {
+  return useContext(TempratureContext);
+}
 
-const TempratureContextProvider = ({ children }) => {
+function TempratureContextProvider({ children }) {
   const [tempMode, setTempMode] = useState(false);
   const [weatherData, setWeatherData] = useState(null);
   const [StateWeatherData, setStateWeatherData] = useState(null);
   const [FetchError, setFetchError] = useState(false);
 
-  /*Weather Api Call */
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+    (async function () {
+      let status = (await Location.requestForegroundPermissionsAsync()).status;
       if (status !== "granted") {
         alert("permission is required");
         return;
@@ -38,8 +39,8 @@ const TempratureContextProvider = ({ children }) => {
       }
     })();
   }, []);
-  const getStateWeatherData = async (cityVal) => {
-    // setStateWeatherData(null);
+
+  async function getStateWeatherData(cityVal) {
     try {
       const URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityVal}&units=metric&appid=${API_KEY}`;
       const res = await fetch(URL);
@@ -48,7 +49,7 @@ const TempratureContextProvider = ({ children }) => {
     } catch (e) {
       setFetchError(true);
     }
-  };
+  }
 
   const value = {
     tempMode,
@@ -62,6 +63,6 @@ const TempratureContextProvider = ({ children }) => {
       {children}
     </TempratureContext.Provider>
   );
-};
+}
 
 export default TempratureContextProvider;
