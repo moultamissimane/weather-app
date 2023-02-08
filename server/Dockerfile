@@ -7,7 +7,7 @@ WORKDIR /server
 # COPY: copy package.json file to the container, then the second one copies all the files inside the project directory.
 COPY package.json /package.json
 
-# RUN: run the command yarn add to install all the dependencies.
+# RUN: run the command npm install to install all the dependencies.
 RUN npm install
 
 # COPY: copy all the files inside the project directory to the container.
