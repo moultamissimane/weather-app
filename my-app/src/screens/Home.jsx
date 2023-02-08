@@ -30,7 +30,7 @@ const Home = () => {
 
   // const { tempMode, weatherData } = useTemp();
 
-  const { tempMode, weatherData, loading } = useTemp();
+  const { tempMode, weatherData } = useTemp();
 
   if (weatherData) {
     const { temp, humidity, wind_speed, weather, pressure, dt } =
